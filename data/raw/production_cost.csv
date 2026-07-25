@@ -1,0 +1,4 @@
+﻿product_code,product_name,fiscal_year,revenue_krw,direct_material_krw,direct_labor_krw,oh_allocation_basis,allocated_oh_krw,total_cost_krw,gross_profit_krw,machine_hours,setup_count,inspection_rework_count,material_issue_count
+P-A,정밀기어,2024,42000000000,18000000000,7560000000,직접노무비,9028000000,34588000000,7412000000,30000,120,400,1200
+P-B,베어링,2024,28000000000,12600000000,3920000000,직접노무비,4682000000,21202000000,6798000000,24000,90,300,900
+P-C,EV 구동부품,2024,18000000000,9900000000,1080000000,직접노무비,1290000000,12270000000,5730000000,66000,390,1300,900
