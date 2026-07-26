@@ -9,7 +9,8 @@ python -m agent.run --dry-run       # 키 없이, 전송할 프롬프트와 도�
 python -m agent.run                 # 6개 절차 전부
 python -m agent.run costing         # 하나만
 python -m agent.run --out out/      # 조서 JSON 저장
-python -m unittest discover tests   # 전체 69개 검증 (API 키 불필요)
+python -m agent.baseline --out out/baseline   # 규칙 기반 대조군 (키 불필요)
+python -m unittest discover tests   # 전체 82개 검증 (API 키 불필요)
 ```
 
 API 키는 환경변수 `ANTHROPIC_API_KEY` 또는 프로젝트 루트 `.env` 에서 읽는다.
@@ -90,10 +91,30 @@ README 4.2("근거 없는 발견은 격하한다")를 코드로 만든 부분이
 `--dry-run` 은 API 호출 없이 전송할 내용 전부를 출력한다. 프롬프트를 보지 않고
 결과만 보면, 잘 나온 것이 설계 덕인지 우연인지 알 수 없다.
 
+## 대조군 — LLM 을 뺀 같은 파이프라인
+
+[`baseline.py`](baseline.py) 는 같은 계산 결과를 받아 같은 조서 형식을 내지만, 판단
+주체가 LLM 이 아니라 임계값 표다. API 키도 네트워크도 쓰지 않는다.
+
+LLM 성적만 있으면 그 숫자가 잘 나온 것인지 알 수 없다. 규칙으로 어디까지 가는지
+먼저 찍어 두면 그 차이가 LLM 이 만든 몫이 된다.
+
+대조군은 세 가지를 **의도적으로 하지 않는다.** 규칙 기반의 한계가 남아 있어야 대조가
+성립하므로, 없음을 [테스트로 고정](../tests/test_baseline.py)했다.
+
+| 하지 않는 것 | 왜 대조에 필요한가 |
+|---|---|
+| 기각 (`rejection_checks` 가 빈 배열) | 임계값 아래로 걸러진 것과 검토 후 기각한 것은 다르다 |
+| 서술 (`narrative` 가 빈 문자열) | 개별 항목 나열은 되지만 인과로 엮는 문장은 규칙으로 안 된다 |
+| 임계값 튜닝 | 점수를 올리려 만지면 대조군이 아니라 이 데이터셋 전용 정답표가 된다 |
+
+대조군의 인용도 `evidence.py` 의 같은 관문을 통과한다 — 규칙이라고 면제되지 않는다.
+채점 결과와 해석은 [`docs/RUN.md`](../docs/RUN.md) 에 있다.
+
 ## 검증
 
 ```
-python -m unittest discover tests -v      # 전체 69개 중 agent 관련 23개, API 키 불필요
+python -m unittest discover tests -v      # 전체 82개 중 agent 관련 23개 + 대조군 13개
 ```
 
 LLM 호출은 대본(`FakeClient`)으로 대체한다. 검증 대상은 모델의 답이 아니라
@@ -118,4 +139,7 @@ LLM 호출은 대본(`FakeClient`)으로 대체한다. 검증 대상은 모델�
 - 턴 상한(기본 16)에 걸리면 잘린 결과를 그대로 낸다. `stopped` 필드에 남기고 감춘다.
 - 조서 렌더러가 없다. 지금은 JSON 과 콘솔 요약까지다.
 - 실제 API 를 붙여 돌린 성적이 아직 없다. `--out` 이 남기는 `runs.json` 을
-  [`scoring/`](../scoring/README.md) 에 넣으면 정답지 기준으로 채점된다.
+  [`scoring/`](../scoring/README.md) 에 넣으면 정답지 기준으로 채점된다. 대조군
+  성적은 이미 기록되어 있다 ([`docs/RUN.md`](../docs/RUN.md)).
+- 대조군의 임계값은 이 데이터셋을 본 사람이 정했다. 다른 회사 자료에 그대로
+  적용되지 않는다. 임계값 없이 판단하는 것이 LLM 에 기대하는 몫이다.

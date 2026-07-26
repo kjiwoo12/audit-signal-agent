@@ -127,9 +127,13 @@ def main(argv=None):
         print(e, file=sys.stderr)
         return 2
 
-    print(f"모델 {args.model} · 절차 {len(procedures)}개")
+    # --json 은 표준출력이 JSON 하나여야 파이프로 넘길 수 있다. 진행 상황은 끈다.
+    print(f"모델 {args.model} · 절차 {len(procedures)}개", file=sys.stderr if args.json else sys.stdout)
     runs = orchestrator.run_all(
-        cl, procedures=procedures, max_turns=args.max_turns, on_event=on_event
+        cl,
+        procedures=procedures,
+        max_turns=args.max_turns,
+        on_event=None if args.json else on_event,
     )
     wp = orchestrator.workpaper(runs, usage=cl.usage)
 
