@@ -9,8 +9,9 @@ python -m agent.run --dry-run       # 키 없이, 전송할 프롬프트와 도�
 python -m agent.run                 # 6개 절차 전부
 python -m agent.run costing         # 하나만
 python -m agent.run --out out/      # 조서 JSON 저장
+python -m agent.run --html r.html   # 조서 HTML 문서 저장 (report/ 사용)
 python -m agent.baseline --out out/baseline   # 규칙 기반 대조군 (키 불필요)
-python -m unittest discover tests   # 전체 82개 검증 (API 키 불필요)
+python -m unittest discover tests   # 전체 98개 검증 (API 키 불필요)
 ```
 
 API 키는 환경변수 `ANTHROPIC_API_KEY` 또는 프로젝트 루트 `.env` 에서 읽는다.
@@ -114,7 +115,7 @@ LLM 성적만 있으면 그 숫자가 잘 나온 것인지 알 수 없다. 규�
 ## 검증
 
 ```
-python -m unittest discover tests -v      # 전체 82개 중 agent 관련 23개 + 대조군 13개
+python -m unittest discover tests -v      # 전체 98개 중 agent 관련 23개 + 대조군 13개
 ```
 
 LLM 호출은 대본(`FakeClient`)으로 대체한다. 검증 대상은 모델의 답이 아니라
@@ -137,7 +138,6 @@ LLM 호출은 대본(`FakeClient`)으로 대체한다. 검증 대상은 모델�
 - 1~5 절차를 순차 실행한다. 서로 의존하지 않으므로 병렬화할 수 있으나 하지 않았다.
 - 재시도는 HTTP 수준만 한다. 모델이 형식을 틀린 경우의 복구는 도구 오류 회신에 의존한다.
 - 턴 상한(기본 16)에 걸리면 잘린 결과를 그대로 낸다. `stopped` 필드에 남기고 감춘다.
-- 조서 렌더러가 없다. 지금은 JSON 과 콘솔 요약까지다.
 - 실제 API 를 붙여 돌린 성적이 아직 없다. `--out` 이 남기는 `runs.json` 을
   [`scoring/`](../scoring/README.md) 에 넣으면 정답지 기준으로 채점된다. 대조군
   성적은 이미 기록되어 있다 ([`docs/RUN.md`](../docs/RUN.md)).

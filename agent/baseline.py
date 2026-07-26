@@ -455,6 +455,7 @@ def main(argv=None):
     ap.add_argument("procedures", nargs="*", choices=ALL, help="실행할 절차 (기본: 전부)")
     ap.add_argument("--out", help="조서 JSON 을 저장할 디렉터리")
     ap.add_argument("--json", action="store_true", help="조서 JSON 을 표준출력으로")
+    ap.add_argument("--html", help="조서를 HTML 문서로 저장할 경로")
     args = ap.parse_args(argv)
 
     procedures = args.procedures or ALL
@@ -491,6 +492,11 @@ def main(argv=None):
             with open(path, "w", encoding="utf-8") as fh:
                 json.dump(obj, fh, ensure_ascii=False, indent=2, default=str)
             print(f"저장: {path}")
+
+    if args.html:
+        import report
+
+        report.write(wp, args.html)
 
     return 0
 

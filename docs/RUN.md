@@ -1,7 +1,7 @@
 # 실행 기록
 
 클론하지 않고도 이 저장소가 무엇을 내는지 볼 수 있게, **실제 터미널 출력을 그대로**
-붙여 둔 문서다. 아래 네 실행은 전부 **API 키 없이** 재현된다.
+붙여 둔 문서다. 아래 다섯 실행은 전부 **API 키 없이** 재현된다.
 
 ```
 Python 3.14.6 · 외부 의존성 없음 (표준 라이브러리만) · 네트워크 불필요
@@ -9,11 +9,12 @@ Python 3.14.6 · 외부 의존성 없음 (표준 라이브러리만) · 네트�
 
 | 실행 | 명령 | 결과 |
 |---|---|---|
-| 1. 전체 검증 | `python -m unittest discover tests` | 82개 통과 |
+| 1. 전체 검증 | `python -m unittest discover tests` | 98개 통과 |
 | 2. 채점기 자기 채점 | `python -m scoring.run --self-test` | Level 1 **7/7** |
 | 3. 규칙 기반 대조군 | `python -m agent.baseline --out out/baseline` | 발견사항 7건 |
 | 4. 대조군 채점 | `python -m scoring.run out/baseline/runs.json` | Level 1 **6/7** |
-| 5. LLM 에이전트 | `python -m agent.run --out out/` | **미실행** (API 키 필요) |
+| 5. 조서 렌더링 | `python -m agent.baseline --html docs/report/baseline.html` | [단일 HTML 문서](report/baseline.html) |
+| 6. LLM 에이전트 | `python -m agent.run --out out/` | **미실행** (API 키 필요) |
 
 정답지는 [`docs/ANSWER_KEY.md`](ANSWER_KEY.md)에 7+1개 항목과 4개 오탐 함정으로
 정의되어 있고, 에이전트 쪽 코드는 이 파일을 참조하지 않는다(테스트로 고정).
@@ -24,9 +25,9 @@ Python 3.14.6 · 외부 의존성 없음 (표준 라이브러리만) · 네트�
 
 ```
 $ python -m unittest discover tests
-..................................................................................
+..................................................................................................
 ----------------------------------------------------------------------
-Ran 82 tests in 0.10s
+Ran 98 tests in 0.10s
 
 OK
 ```
@@ -218,7 +219,52 @@ C2 는 대조군이 실제로 지적했고 조서에 들어 있다. 채점기가
 
 ---
 
-## 5. LLM 에이전트 실행 — 아직 비어 있다
+## 5. 조서 렌더링
+
+같은 조서 JSON 을 사람이 읽는 문서로 만든다. 산출물은
+[`docs/report/baseline.html`](report/baseline.html) 로 커밋되어 있다.
+
+```
+$ python -m agent.baseline --out out/baseline --html docs/report/baseline.html
+규칙 기반 대조군 (LLM 미사용) · 절차 6개
+임계값: return_rate_multiple=2.0, divergence_pp=50.0
+...
+저장: out/baseline\workpaper.json
+저장: out/baseline\runs.json
+저장: docs/report/baseline.html (29,610자)
+```
+
+문서는 세 층으로 접혀 있다.
+
+```
+1층  결론          발견사항 7건 (High 4 · Medium 3) · 추정 영향금액 · 근거등급 분포
+2층  요약표         건별 한 줄 + 위험등급 + 추정 영향금액 + 근거등급 + 절차
+3층  드릴다운        정량화 → 근거 전표 → 원천 CSV 행 원문     ← 기본 닫힘
+```
+
+**렌더러는 조서 내용을 바꾸지 않는다.** 요약하거나 보태기 시작하면 화면에 보이는 것과
+채점기가 채점한 것이 갈라진다. 그래서 검증 대상은 "예쁘게 나오는가"가 아니다.
+
+| 무엇을 고정했나 | 왜 |
+|---|---|
+| 외부 스크립트·스타일·이미지 참조 0개 | 조서는 보존 대상이고 CDN 은 보존 대상이 아니다 |
+| 두 번 렌더하면 같은 바이트 | 산출물을 커밋해 두므로 diff 가 의미를 가져야 한다 |
+| 서술이 비면 결론을 지어내지 않음 | 대조군의 `narrative` 는 빈 문자열이다 |
+| 격하된 발견은 요약표에 섞지 않음 | 같은 표에 넣으면 격하가 무의미해진다 |
+
+그리고 **비어 있는 칸을 빈칸으로 두지 않는다.** 기각 기록 0건은 화면에 이렇게 나간다.
+
+```
+기각 기록
+  기각 기록이 없다. 이것은 "검토했고 전부 문제였다"는 뜻이 아니라, 정상 판정을
+  기록하지 않았다는 뜻이다. 임계값 아래로 걸러진 항목과 검토 후 기각한 항목을
+  이 조서로는 구별할 수 없다.
+```
+
+위 ②에서 말한 한계를 산출물이 스스로 말하게 만든 것이다. 조서에서 빈칸은 "검토하지
+않았음"과 "검토했으나 해당 없음"을 구별해 주지 못한다.
+
+## 6. LLM 에이전트 실행 — 아직 비어 있다
 
 ```
 $ python -m agent.run --out out/
@@ -252,9 +298,9 @@ Level 1 숫자가 아니라 **기각 기록의 유무와 서술의 인과 구조
 
 ```bash
 git clone <this repo> && cd audit-signal-agent
-python -m unittest discover tests            # 82개
+python -m unittest discover tests            # 98개
 python -m scoring.run --self-test            # 채점기 만점 확인
-python -m agent.baseline --out out/baseline  # 대조군 실행
+python -m agent.baseline --out out/baseline --html out/report.html   # 대조군 + 조서
 python -m scoring.run out/baseline/runs.json # 대조군 채점
 ```
 

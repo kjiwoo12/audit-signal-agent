@@ -1,0 +1,4 @@
+# 렌더된 조서는 기계가 만들어 커밋하는 산출물이다. 체크아웃 때 줄바꿈이 바뀌면
+# 다시 렌더링했을 때 내용이 같은데도 diff 가 뜬다. report/render.py 가 LF 로 쓰므로
+# 저장소와 작업 사본을 둘 다 LF 로 고정한다.
+docs/report/*.html text eol=lf

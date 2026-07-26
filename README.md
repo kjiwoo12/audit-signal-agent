@@ -8,10 +8,12 @@
 
 | 명령 | 결과 |
 |---|---|
-| `python -m unittest discover tests` | 테스트 82개 전부 통과 |
+| `python -m unittest discover tests` | 테스트 98개 전부 통과 |
 | `python -m scoring.run --self-test` | 채점기에 모범답안을 넣으면 **7/7** — 채점기부터 못 믿으면 나머지 숫자도 못 믿는다 |
 | `python -m agent.baseline` | **AI를 뺀 버전.** 심어둔 문제 7개 중 **6개** 찾음 · "확인했고 정상이었다" 기록 **0건** · 인과 설명 **없음** |
 | `python -m agent.run --dry-run` | AI에게 실제로 보내는 지시문과 도구 명세 전문 |
+
+**실제 산출물**: [`docs/report/baseline.html`](docs/report/baseline.html) — 위 대조군이 낸 감사조서다. 결론 → 요약표 → **원천 CSV 행**까지 세 층으로 접혀 있다. 자바스크립트도 외부 참조도 없는 단일 파일이라 내려받아 바로 열린다.
 
 AI를 실제로 붙여 돌린 성적은 아직 없다(유료 키 필요). **돌린 척한 결과를 채워 넣지 않았다** — 대신 AI 없이 어디까지 되는지 먼저 재 두었고, 거기서 막힌 지점이 이 프로젝트가 AI에 맡긴 몫과 정확히 겹친다.
 
@@ -122,6 +124,24 @@ AI를 뺀 버전은 함정 4개를 하나도 틀리게 보고하지 않았다. �
 
 그래서 이 부분은 점수를 매기지 않고 사람이 판정하도록 남겼다. 그리고 이 현상이 사라지면 위 논거의 근거도 사라지므로, **현상 자체를 테스트로 고정해 두었다.**
 
+### 결과물은 어떻게 생겼나
+
+[`docs/report/baseline.html`](docs/report/baseline.html) 이 실제 산출물이다. 감사조서 한 장이고, 세 층으로 접혀 있다.
+
+```
+1층  결론          발견 7건 (High 4·Medium 3) · 추정 영향 · 근거등급 분포
+2층  요약표         건별 한 줄, 클릭하면 해당 발견으로 이동
+3층  드릴다운        정량화 → 근거 전표 → 원천 CSV 행 원문   ← 접혀 있음
+```
+
+3층을 접어 둔 것이 의도다. 펼쳐 놓으면 아무도 1층을 안 읽고, 아예 빼면 아무도 조서를 안 믿는다.
+
+그리고 **비어 있는 칸을 빈칸으로 두지 않는다.** 기각 기록이 0건이면 조서에 이렇게 적힌다.
+
+> 기각 기록이 없다. 이것은 "검토했고 전부 문제였다"는 뜻이 아니라, **정상 판정을 기록하지 않았다**는 뜻이다.
+
+조서에서 빈칸은 "검토 안 함"과 "검토했으나 해당 없음"을 구별해 주지 못한다. 위 ①번 얘기를 산출물이 스스로 말하게 만든 것이다.
+
 ### 지금 없는 것
 
 AI를 실제로 붙여 돌린 성적. 유료 API 키가 필요해서 아직 비어 있다.
@@ -229,7 +249,9 @@ CEO 보고서 형식이 아니라 **회계법인이 실제로 쓰는 조서 형�
 
 이유는 두 가지다. 첫째, 이 형식은 **다음 행동이 정해진다.** "매출이 과대계상된 것 같습니다"는 읽고 끝나지만, "확인 절차: 2025년 1월 출고 9건의 인도완료 증빙 대조"는 누가 무엇을 할지 정해진다. 둘째, 조직이 원래 일하던 방식과 맞물린다. 새 형식을 배우게 만드는 도구는 쓰이지 않는다.
 
-읽는 사람에 따라 깊이를 다르게 한다. **결론 3줄 → 발견사항 요약표 → 근거 전표 드릴다운.** 경영진은 첫 단락만, 실무자는 전표까지 내려간다.
+읽는 사람에 따라 깊이를 다르게 한다. **결론 → 발견사항 요약표 → 근거 전표 드릴다운.** 경영진은 첫 화면만, 실무자는 원천 CSV 행까지 내려간다.
+
+이건 계획이 아니라 [실제 산출물](docs/report/baseline.html)이다 ([`report/`](report/README.md)). 렌더러는 조서 내용을 한 글자도 바꾸지 않고 읽는 순서만 정한다 — 요약하거나 보태기 시작하면 화면에 보이는 것과 채점기가 채점한 것이 갈라진다. 그리고 **비어 있는 항목을 공백으로 두지 않는다.** 기각 기록이 0건이면 "기각 기록이 없다 = 정상 판정을 기록하지 않았다는 뜻"이라고 적는다. 조서에서 빈칸은 "검토하지 않았음"과 "검토했으나 해당 없음"을 구별해 주지 못한다.
 
 ### 4.4 채점 가능하게 만든다
 
@@ -282,10 +304,10 @@ flowchart LR
 | 에이전트 오케스트레이션 ([`agent/`](agent/)) | 완료 · 도구 4종 |
 | 정답지 기준 채점 하네스 ([`scoring/`](scoring/)) | 완료 · 자기채점 통과 |
 | 규칙 기반 대조군 ([`agent/baseline.py`](agent/baseline.py)) | 완료 · **채점 결과 기록** |
-| 조서 형식 리포트 렌더러 | 예정 |
+| 조서 형식 리포트 렌더러 ([`report/`](report/README.md)) | 완료 · [산출물 커밋](docs/report/baseline.html) |
 | LLM 실행 성적 기록 | **미실행** (API 키 필요) |
 
-테스트는 82개이고 API 키 없이 전부 돌아간다. 채점기는 정답지대로 작성한 모범 조서에 7/7을 주고, 근거 없는 제출물에는 0/7을 준다 — 양쪽을 다 테스트로 고정했다.
+테스트는 98개이고 API 키 없이 전부 돌아간다. 채점기는 정답지대로 작성한 모범 조서에 7/7을 주고, 근거 없는 제출물에는 0/7을 준다 — 양쪽을 다 테스트로 고정했다.
 
 ### 측정된 것: 규칙만으로 어디까지 가는가
 
@@ -320,19 +342,20 @@ flowchart LR
 ```bash
 python data/generate.py             # 데이터셋 재생성 (SEED 고정, 결과 항상 동일)
 python -m tools.run                 # 6개 절차의 결정론적 계산
-python -m agent.baseline --out out/baseline   # 규칙 기반 대조군 (API 키 불필요)
+python -m agent.baseline --out out/baseline --html docs/report/baseline.html
+                                    # 규칙 기반 대조군 + 조서 HTML (API 키 불필요)
 python -m agent.run --dry-run       # 에이전트에 무엇을 보내는지 확인 (API 키 불필요)
-python -m agent.run --out out/      # 에이전트 실행 (ANTHROPIC_API_KEY 필요)
+python -m agent.run --out out/ --html out/report.html   # 에이전트 실행 (ANTHROPIC_API_KEY 필요)
 python -m scoring.run out/runs.json # 정답지 기준 채점
 python -m scoring.run --self-test   # 채점기가 만점을 줄 수 있는지 확인 (API 키 불필요)
-python -m unittest discover tests   # 82개 검증 (API 키 불필요)
+python -m unittest discover tests   # 98개 검증 (API 키 불필요)
 ```
 
 **API 키 없이 재현되는 실행이 네 개**이고 출력은 [`docs/RUN.md`](docs/RUN.md)에 그대로 붙어 있다.
 
 의존성 없음. 표준 라이브러리만 쓴다. Anthropic SDK도 쓰지 않고 `urllib`로 Messages API를 직접 호출한다. 생성된 CSV는 `data/raw/`에 커밋되어 있으므로 `generate.py`를 실행하지 않아도 된다.
 
-`tools/`는 각 Skill의 3절을, `agent/`는 4~7절을, `scoring/`은 정답지 대조를 담당한다. 상세는 [`tools/`](tools/README.md) · [`agent/`](agent/README.md) · [`scoring/`](scoring/README.md).
+`tools/`는 각 Skill의 3절을, `agent/`는 4~7절을, `scoring/`은 정답지 대조를, `report/`는 조서 렌더링을 담당한다. 상세는 [`tools/`](tools/README.md) · [`agent/`](agent/README.md) · [`scoring/`](scoring/README.md) · [`report/`](report/README.md).
 
 ```
 cost-driver-alignment
