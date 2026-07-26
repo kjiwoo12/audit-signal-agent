@@ -79,7 +79,7 @@ LLM  : "P-C가 31.8% 흑자에서 8.2% 적자로 뒤집힌다. 이것이 의미�
 ## 검증
 
 ```
-python -m unittest discover tests -v      # 27 tests
+python -m unittest discover tests -v      # 전체 69개 중 tools 관련 27개
 ```
 
 | 묶음 | 검증 |
