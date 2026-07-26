@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang=ko>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Audit Signal Agent — 산출물</title>
+<style>
+:root{--ink:#16191d;--dim:#5b6472;--line:#dfe3e8;--bg:#fff;--soft:#f6f7f9;--ok:#1f7a4d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--soft);color:var(--ink);
+font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:56px 20px 80px}
+h1{margin:0 0 8px;font-size:26px;letter-spacing:-.01em}
+.lede{color:var(--dim);margin:0 0 32px}
+a.card{display:block;background:var(--bg);border:1px solid var(--line);border-radius:8px;
+padding:18px 20px;margin-bottom:14px;text-decoration:none;color:inherit}
+a.card:hover{border-color:var(--ink)}
+a.card strong{display:block;font-size:17px;margin-bottom:4px}
+a.card span{display:block;color:var(--dim);font-size:14px}
+.tag{display:inline-block;margin-top:8px;padding:2px 8px;border-radius:3px;font-size:12px;
+background:#eaf6ef;color:var(--ok);border:1px solid #c9e6d5}
+h2{font-size:15px;margin:34px 0 10px;color:var(--dim)}
+ul{margin:0;padding-left:20px;color:var(--dim);font-size:14px}
+li{margin:5px 0}
+li a{color:var(--ink)}
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);
+color:var(--dim);font-size:13px}
+@media (max-width:640px){.wrap{padding:32px 16px 60px}h1{font-size:22px}}
+</style>
+</head>
+<body>
+<div class=wrap>
+
+<h1>Audit Signal Agent</h1>
+<p class=lede>여러 시스템에 흩어진 회계 데이터를 교차 검증해, 재무제표 겉면에는
+드러나지 않는 문제를 찾아내는 LLM 에이전트. 이 페이지는 <strong>산출물</strong>만
+모아 둔 곳이다.</p>
+
+<a class=card href="report/baseline.html">
+  <strong>감사조서 (규칙 기반 대조군)</strong>
+  <span>발견사항 7건. 결론 → 요약표 → 원천 CSV 행까지 세 층으로 접혀 있다.
+  자바스크립트도 외부 참조도 없는 단일 HTML 문서다.</span>
+  <span class=tag>API 키 없이 생성됨</span>
+</a>
+
+<a class=card href="https://github.com/kjiwoo12/audit-signal-agent/blob/main/docs/RUN.md">
+  <strong>실행 기록</strong>
+  <span>테스트 98개, 채점기 자기 채점, 대조군 실행과 채점의 실제 터미널 출력을
+  그대로 붙여 둔 문서.</span>
+</a>
+
+<h2>문서</h2>
+<ul>
+  <li><a href="https://github.com/kjiwoo12/audit-signal-agent">저장소와 기획서 (README)</a>
+    — 무엇을 만들었는지보다 왜 이 문제를 골랐는지</li>
+  <li><a href="https://github.com/kjiwoo12/audit-signal-agent/blob/main/docs/DATASET.md">데이터셋
+    명세</a> — 11개 파일, 4,200여 행, 5개 시스템</li>
+  <li><a href="https://github.com/kjiwoo12/audit-signal-agent/blob/main/docs/ANSWER_KEY.md">정답지</a>
+    — 심어 둔 문제 7개와 오탐 함정 4개</li>
+</ul>
+
+<footer>가상의 회사·인물·거래로 구성된 합성 데이터입니다. 실제 기업의 재무정보나
+감사 결과와 무관합니다.</footer>
+
+</div>
+</body>
+</html>

@@ -13,7 +13,7 @@ Python 3.14.6 · 외부 의존성 없음 (표준 라이브러리만) · 네트�
 | 2. 채점기 자기 채점 | `python -m scoring.run --self-test` | Level 1 **7/7** |
 | 3. 규칙 기반 대조군 | `python -m agent.baseline --out out/baseline` | 발견사항 7건 |
 | 4. 대조군 채점 | `python -m scoring.run out/baseline/runs.json` | Level 1 **6/7** |
-| 5. 조서 렌더링 | `python -m agent.baseline --html docs/report/baseline.html` | [단일 HTML 문서](report/baseline.html) |
+| 5. 조서 렌더링 | `python -m agent.baseline --html docs/report/baseline.html` | [단일 HTML 문서](https://kjiwoo12.github.io/audit-signal-agent/report/baseline.html) |
 | 6. LLM 에이전트 | `python -m agent.run --out out/` | **미실행** (API 키 필요) |
 
 정답지는 [`docs/ANSWER_KEY.md`](ANSWER_KEY.md)에 7+1개 항목과 4개 오탐 함정으로
@@ -221,8 +221,9 @@ C2 는 대조군이 실제로 지적했고 조서에 들어 있다. 채점기가
 
 ## 5. 조서 렌더링
 
-같은 조서 JSON 을 사람이 읽는 문서로 만든다. 산출물은
-[`docs/report/baseline.html`](report/baseline.html) 로 커밋되어 있다.
+같은 조서 JSON 을 사람이 읽는 문서로 만든다.
+**[산출물 열어보기](https://kjiwoo12.github.io/audit-signal-agent/report/baseline.html)** —
+소스는 [`docs/report/baseline.html`](report/baseline.html) 에 커밋되어 있다.
 
 ```
 $ python -m agent.baseline --out out/baseline --html docs/report/baseline.html

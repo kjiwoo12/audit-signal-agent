@@ -1,8 +1,9 @@
 # 조서 렌더러
 
-조서 JSON 을 **한 파일로 완결된 HTML 문서**로 만든다. 실제 출력물이
-[`docs/report/baseline.html`](../docs/report/baseline.html) 에 커밋되어 있다
-(GitHub 은 HTML 을 소스로 보여주므로, 브라우저에서 보려면 내려받아 열거나 Pages 를 켠다).
+조서 JSON 을 **한 파일로 완결된 HTML 문서**로 만든다.
+
+**→ [실제 산출물 열어보기](https://kjiwoo12.github.io/audit-signal-agent/report/baseline.html)**
+(소스는 [`docs/report/baseline.html`](../docs/report/baseline.html) 에 커밋되어 있다)
 
 ```bash
 python -m agent.baseline --html docs/report/baseline.html   # 대조군 조서 (API 키 불필요)
