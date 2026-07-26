@@ -1,4 +1,4 @@
-# Ledger Sentinel
+# Audit Signal Agent
 
 **여러 시스템에 흩어진 회계 데이터를 교차 검증해, 재무제표 겉면에는 드러나지 않는 문제를 찾아내는 LLM 에이전트.**
 
