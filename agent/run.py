@@ -107,7 +107,15 @@ def print_workpaper(wp):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description="감사 절차 에이전트")
-    ap.add_argument("procedures", nargs="*", choices=ALL, help="실행할 절차 (기본: 전부)")
+    # choices= 를 쓰지 않는다. 위치인자에 nargs="*" 와 choices 를 함께 주면 인자를
+    # 생략했을 때 기본값 [] 자체가 choices 검사에 걸려 3.12 미만에서 죽는다.
+    # 목록은 metavar 로 보여주고 검사는 아래에서 직접 한다.
+    ap.add_argument(
+        "procedures",
+        nargs="*",
+        metavar="{%s}" % ",".join(ALL),
+        help="실행할 절차 (기본: 전부)",
+    )
     ap.add_argument("--dry-run", action="store_true", help="API 호출 없이 프롬프트만 출력")
     ap.add_argument("--model", default=client_mod.DEFAULT_MODEL)
     ap.add_argument("--max-turns", type=int, default=orchestrator.MAX_TURNS)
@@ -115,6 +123,10 @@ def main(argv=None):
     ap.add_argument("--json", action="store_true", help="조서 JSON 을 표준출력으로")
     ap.add_argument("--html", help="조서를 HTML 문서로 저장할 경로")
     args = ap.parse_args(argv)
+
+    unknown = [p for p in args.procedures if p not in ALL]
+    if unknown:
+        ap.error("알 수 없는 절차: %s (가능: %s)" % (", ".join(unknown), ", ".join(ALL)))
 
     procedures = args.procedures or ALL
 

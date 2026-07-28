@@ -9,7 +9,7 @@ Python 3.14.6 · 외부 의존성 없음 (표준 라이브러리만) · 네트�
 
 | 실행 | 명령 | 결과 |
 |---|---|---|
-| 1. 전체 검증 | `python -m unittest discover tests` | 98개 통과 |
+| 1. 전체 검증 | `python -m unittest discover tests` | 103개 통과 |
 | 2. 채점기 자기 채점 | `python -m scoring.run --self-test` | Level 1 **7/7** |
 | 3. 규칙 기반 대조군 | `python -m agent.baseline --out out/baseline` | 발견사항 7건 |
 | 4. 대조군 채점 | `python -m scoring.run out/baseline/runs.json` | Level 1 **6/7** |
@@ -27,7 +27,7 @@ Python 3.14.6 · 외부 의존성 없음 (표준 라이브러리만) · 네트�
 $ python -m unittest discover tests
 ..................................................................................................
 ----------------------------------------------------------------------
-Ran 98 tests in 0.10s
+Ran 103 tests in 0.18s
 
 OK
 ```
@@ -299,7 +299,7 @@ Level 1 숫자가 아니라 **기각 기록의 유무와 서술의 인과 구조
 
 ```bash
 git clone <this repo> && cd audit-signal-agent
-python -m unittest discover tests            # 98개
+python -m unittest discover tests            # 103개
 python -m scoring.run --self-test            # 채점기 만점 확인
 python -m agent.baseline --out out/baseline --html out/report.html   # 대조군 + 조서
 python -m scoring.run out/baseline/runs.json # 대조군 채점

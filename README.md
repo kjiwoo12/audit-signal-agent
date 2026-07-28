@@ -12,7 +12,7 @@
 
 | 명령 | 결과 |
 |---|---|
-| `python -m unittest discover tests` | 테스트 98개 전부 통과 |
+| `python -m unittest discover tests` | 테스트 103개 전부 통과 |
 | `python -m scoring.run --self-test` | 채점기에 모범답안을 넣으면 **7/7** — 채점기부터 못 믿으면 나머지 숫자도 못 믿는다 |
 | `python -m agent.baseline` | **AI를 뺀 버전.** 심어둔 문제 7개 중 **6개** 찾음 · "확인했고 정상이었다" 기록 **0건** · 인과 설명 **없음** |
 | `python -m agent.run --dry-run` | AI에게 실제로 보내는 지시문과 도구 명세 전문 |
@@ -313,7 +313,7 @@ flowchart LR
 | 조서 형식 리포트 렌더러 ([`report/`](report/README.md)) | 완료 · [산출물 커밋](docs/report/baseline.html) |
 | LLM 실행 성적 기록 | **미실행** (API 키 필요) |
 
-테스트는 98개이고 API 키 없이 전부 돌아간다. 채점기는 정답지대로 작성한 모범 조서에 7/7을 주고, 근거 없는 제출물에는 0/7을 준다 — 양쪽을 다 테스트로 고정했다.
+테스트는 103개이고 API 키 없이 전부 돌아간다. 채점기는 정답지대로 작성한 모범 조서에 7/7을 주고, 근거 없는 제출물에는 0/7을 준다 — 양쪽을 다 테스트로 고정했다.
 
 ### 측정된 것: 규칙만으로 어디까지 가는가
 
@@ -354,7 +354,7 @@ python -m agent.run --dry-run       # 에이전트에 무엇을 보내는지 확
 python -m agent.run --out out/ --html out/report.html   # 에이전트 실행 (ANTHROPIC_API_KEY 필요)
 python -m scoring.run out/runs.json # 정답지 기준 채점
 python -m scoring.run --self-test   # 채점기가 만점을 줄 수 있는지 확인 (API 키 불필요)
-python -m unittest discover tests   # 98개 검증 (API 키 불필요)
+python -m unittest discover tests   # 103개 검증 (API 키 불필요)
 ```
 
 **API 키 없이 재현되는 실행이 네 개**이고 출력은 [`docs/RUN.md`](docs/RUN.md)에 그대로 붙어 있다.

@@ -452,11 +452,23 @@ def main(argv=None):
     ap = argparse.ArgumentParser(
         description="규칙 기반 대조군 — LLM·API 키·네트워크를 쓰지 않는다"
     )
-    ap.add_argument("procedures", nargs="*", choices=ALL, help="실행할 절차 (기본: 전부)")
+    # choices= 를 쓰지 않는다. 위치인자에 nargs="*" 와 choices 를 함께 주면 인자를
+    # 생략했을 때 기본값 [] 자체가 choices 검사에 걸려 3.12 미만에서 죽는다.
+    # 목록은 metavar 로 보여주고 검사는 아래에서 직접 한다.
+    ap.add_argument(
+        "procedures",
+        nargs="*",
+        metavar="{%s}" % ",".join(ALL),
+        help="실행할 절차 (기본: 전부)",
+    )
     ap.add_argument("--out", help="조서 JSON 을 저장할 디렉터리")
     ap.add_argument("--json", action="store_true", help="조서 JSON 을 표준출력으로")
     ap.add_argument("--html", help="조서를 HTML 문서로 저장할 경로")
     args = ap.parse_args(argv)
+
+    unknown = [p for p in args.procedures if p not in ALL]
+    if unknown:
+        ap.error("알 수 없는 절차: %s (가능: %s)" % (", ".join(unknown), ", ".join(ALL)))
 
     procedures = args.procedures or ALL
 
