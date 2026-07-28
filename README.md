@@ -1,5 +1,9 @@
 # Audit Signal Agent
 
+[![tests](https://github.com/kjiwoo12/audit-signal-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/kjiwoo12/audit-signal-agent/actions/workflows/tests.yml)
+[![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
+[![dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)](.github/workflows/tests.yml)
+
 **여러 시스템에 흩어진 회계 데이터를 교차 검증해, 재무제표 겉면에는 드러나지 않는 문제를 찾아내는 LLM 에이전트.**
 
 > 이 문서는 코드 설명서가 아니라 **기획서**다. 무엇을 만들었는지보다 **왜 이 문제를 골랐고 AI에 어떤 역할을 줬는지**가 이 프로젝트의 내용이다.

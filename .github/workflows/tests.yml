@@ -1,0 +1,45 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  # 조서와 실행 로그가 전부 한글이다. CI 는 표준출력이 파이프로 붙기 때문에
+  # 콘솔 코드페이지가 아니라 로케일 인코딩이 쓰이고, en-US 러너에서는 그게
+  # 한글을 못 담는다. UTF-8 모드로 고정해 OS 와 무관하게 같은 출력을 낸다.
+  PYTHONUTF8: "1"
+
+jobs:
+  test:
+    name: ${{ matrix.os }} · py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # 한 칸이 깨져도 나머지 칸의 결과를 봐야 원인을 좁힐 수 있다.
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # 의존성을 설치하는 단계가 없다. 이 프로젝트는 표준 라이브러리만 쓴다.
+      # requirements.txt 도 없고 가상환경도 필요 없다.
+
+      - name: 단위 테스트
+        run: python -m unittest discover tests
+
+      - name: 채점기 자체검증 — 모범답안에 만점을 주는지
+        run: python -m scoring.run --self-test
+
+      - name: 규칙 기반 대조군 — API 키 없이 도는지
+        run: python -m agent.baseline
+
+      - name: 전송 내용 점검 — 모델에게 무엇을 허용했는지
+        run: python -m agent.run --dry-run
